@@ -1,0 +1,68 @@
+import re
+
+regex = r'(\d*)(:\s)(\d*)(.*)'
+
+x = input("Please enter a volume number: ")
+volum_1_end = int(input("What is the last page in volume 1's range?: "))
+volum_2_end = int(input("What is the last page in volume 2's range?: "))
+volum_3_end = int(input("What is the last page in volume 3's range?: "))
+volum_4_end = int(input("What is the last page in volume 4's range?: "))
+volum_5_end = int(input("What is the last page in volume 5's range?: "))
+volum_6_end = int(input("What is the last page in volume 6's range?: "))
+
+def splitCollation(string):
+    print("string for splitting:" + string)
+    return list(re.findall(regex, string)[0])
+
+
+def getHeft(pageNumber):
+        if 1 <= pageNumber <= volum_1_end:
+            return "1"
+        if volum_1_end + 1 <= pageNumber <= volum_2_end:
+            return "2"
+        if volum_2_end + 1 <= pageNumber <= volum_3_end:
+            return "3"
+        if volum_3_end + 1 <= pageNumber <= volum_4_end:
+            return "4"
+        if volum_4_end + 1 <= pageNumber <= volum_5_end:
+            return "5"
+        if volum_5_end + 1 <= pageNumber <= volum_6_end:
+            return "6"
+
+    
+
+def main():
+
+    
+    
+    inputFile = open("InputCollations.txt", "r")
+    outputFile = open("OutputCollations.txt", "w+")
+
+    count = 1
+    outLines = []
+    for line in inputFile:
+        line = line.strip()
+        if line and re.findall(regex, line):
+            collationParts = splitCollation(line)
+            if not collationParts[0]:
+                collationParts[0] = x
+            print(collationParts)
+            heft = getHeft(int(collationParts[2]))
+            if heft:
+                heftString = "(" + heft + ")"
+                collationParts.insert(1, heftString)
+                line = "".join(collationParts)
+
+                print("Formatting collation {}".format(count))
+
+                count += 1
+
+                print("\n")
+                print("All done! - outputed as 'outputCollations.txt'")
+        outLines.append(line)
+    outputFile.write("\n".join(outLines))
+    inputFile.close()
+    outputFile.close()
+    
+           
+main()
